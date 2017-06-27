@@ -131,18 +131,18 @@ int main()
 
     	  
     	  estimations.push_back(estimate);
-    	  cout << "Estimates" << endl;
-    	  cout << estimate;
-    	  cout << endl;
+    	  // cout << "Estimates" << endl;
+    	  // cout << estimate;
+    	  // cout << endl;
 
-    	  cout << "GT" << endl;
-    	  cout << gt_values;
-    	  cout << endl;
+    	  // cout << "GT" << endl;
+    	  // cout << gt_values;
+    	  // cout << endl;
 
     	  //cout << "End of  Fusion Process Measurement" << endl;
 
     	  	VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
-    	  	cout << "RMSE:" << endl << RMSE << endl;
+    	  // cout << "RMSE:" << endl << RMSE << endl;
 
     	  
     	  //cout << "Before sending message" << endl;

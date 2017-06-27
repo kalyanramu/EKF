@@ -63,9 +63,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float vx = x_[2];
   float vy = x_[3];
   
-  cout << "X vector: " << endl << x_ << endl;
+  //cout << "X vector: " << endl << x_ << endl;
   float rho = sqrt(px*px+py*py);
-  // avoid division by zero
+
+  //Normalize theta to -pi,pi
   float theta;
   if(fabs(px) < 0.001){
     cout << "Error while converting vector x_ to polar coordinates: Division by Zero" << endl;
@@ -73,8 +74,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   else {
   theta = atan2(py, px);
   }
-  //float theta = atan2(py,px); //*Need to convert the angle to -pi,pi
-  cout << "theta:" << theta << endl;
+
+  // avoid division by zero
+  //cout << "theta:" << theta << endl;
   float rho_dot;
   if (rho < 0.001)
   {
@@ -90,15 +92,16 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd y = z- zpred; //can exceed pi (e.g., pi -(-pi))
 
 
-//Normalize error angle  
-  while (y(1)> M_PI) {
-    y(1) -= 2 * M_PI;   
-  }
-  
-  while (y(1)<-M_PI) {
-    y(1) += 2 * M_PI;
-  }
-  
+ 
+  //Constrain angle to -pi,pi
+  float x = y(1);
+  float M_2PI = 2*M_PI;
+  x = fmod(x + M_PI,M_2PI);
+  if (x < 0)
+        x += M_2PI;
+  y(1) = x - M_PI;
+
+
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
@@ -111,7 +114,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   P_ = (I - K * H_) * P_;
   
 }
-
 
 
 

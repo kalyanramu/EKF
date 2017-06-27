@@ -105,6 +105,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 		//Initialize Process Co-varance Matrix
 		ekf_.Q_ = MatrixXd::Zero(4,4);
 
+		//Setup H_laser Matrix, forgot this initially and was giving lot of errors
+		H_laser_ << 1,0,0,0,
+								0,1,0,0;
+
 
     previous_timestamp_ = measurement_pack.timestamp_; //update timestamp
     // done initializing, no need to predict or update
@@ -169,6 +173,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     
   } else {
     // Laser updates
+    //cout << "H_laser is :" << endl << H_laser_<< endl;
+    //getchar();
     ekf_.H_ = H_laser_;
     ekf_.R_ = R_laser_;
     ekf_.Update(measurement_pack.raw_measurements_);
@@ -176,6 +182,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   }
 
   // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+  //cout << "x_ = " << ekf_.x_ << endl;
+  //cout << "P_ = " << ekf_.P_ << endl;
 }
